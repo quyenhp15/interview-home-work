@@ -1,6 +1,10 @@
 var app = require('express')();
-var http = require('http').createServer(app);
-var io = require('socket.io')(http);
+var server = require('http').createServer(app);
+var io = require('socket.io')(server,{
+      cors:{
+            origin: '*'
+      }
+});
 
 io.on('connection', (socket)=> {
 
@@ -10,9 +14,9 @@ io.on('connection', (socket)=> {
       });
 
       // Print messages
-      socket.on('chat message', (msg) => {
-            console.log('message: ' + msg);
-            io.emit('chat message', msg);
+      socket.on('message', comment => {
+            console.log('Message: ' + comment);
+            io.emit('message', comment);
       });
 
 })
@@ -21,3 +25,4 @@ var server_port = process.env.YOUR_PORT || process.env.PORT || 3000;
 http.listen(server_port, () => {
     console.log("Started on : "+ server_port);
 })
+console.log("Server connected");
